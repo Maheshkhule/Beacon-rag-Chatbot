@@ -66,41 +66,51 @@ The system processes 11 self-help and philosophy books (200+ pages each), chunks
 
 ---
 
-## 🏗️ Architecture
-┌─────────────────────────────────────────────────────────────────────┐
-│ USER INTERFACE │
-│ (Streamlit Chat Interface) │
-└────────────────────────────┬───────────────────────────────────────┘
-│
-▼
-┌─────────────────────────────────────────────────────────────────────┐
-│ RAG PIPELINE │
-│ ┌───────────────┐ ┌───────────────┐ ┌───────────────────────┐ │
-│ │ RETRIEVER │ │ RERANKER │ │ RESPONSE GENERATOR │ │
-│ │ (FAISS) │──│ (Optional) │──│ (Groq LLM) │ │
-│ │ Top-3 chunks │ │ Score refine │ │ llama-3.1-8b-instant │ │
-│ └───────────────┘ └───────────────┘ └───────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────┘
-│
-▼
-┌─────────────────────────────────────────────────────────────────────┐
-│ VECTOR DATABASE │
-│ (FAISS - HNSW Index) │
-│ Stored in 'storage/' folder │
-│ 2,176 chunks × 384-dim embeddings │
-└─────────────────────────────────────────────────────────────────────┘
-│
-▼
-┌─────────────────────────────────────────────────────────────────────┐
-│ INGESTION PIPELINE │
-│ ┌──────────┐ ┌─────────┐ ┌────────────┐ ┌──────────────────┐ │
-│ │ PDF │ │ TEXT │ │ CHUNKING │ │ EMBEDDING │ │
-│ │ FILES │─▶│EXTRACTION│─▶│ (512 tokens│─▶│ (all-MiniLM │ │
-│ │ (11) │ │ (OCR) │ │ overlap 50│ │ L6-v2) │ │
-│ └──────────┘ └─────────┘ └────────────┘ └──────────────────┘ │
-└─────────────────────────────────────────────────────────────────────┘
+## 🏗️ System Architecture
 
+```mermaid
+flowchart TD
 
+    A["👤 User"] --> B["🖥️ Streamlit<br/>Chat Interface"]
+
+    B --> C["🔍 FAISS Retriever<br/>Top-3 Chunks"]
+
+    C --> D["🔄 Optional Reranker<br/>Score Refinement"]
+
+    D --> E["🤖 Groq LLM<br/>llama-3.1-8b-instant"]
+
+    E --> B
+
+    F["📚 PDF Documents<br/>11 Files"] --> G["📄 Text Extraction<br/>LlamaIndex + OCR"]
+
+    G --> H["✂️ Chunking<br/>512 Tokens / 50 Overlap"]
+
+    H --> I["🧠 Embeddings<br/>all-MiniLM-L6-v2<br/>384 Dimensions"]
+
+    I --> J["🗄️ FAISS HNSW Index<br/>2,176 Chunks"]
+
+    J --> C
+
+    K["💾 storage/<br/>FAISS Index + Metadata"] --- J
+```
+
+### 🔄 RAG Workflow
+
+1. **User Query** → User enters a question through the Streamlit chat interface.
+2. **Retrieval** → FAISS searches the vector index and retrieves the top 3 relevant chunks.
+3. **Reranking** → An optional reranker refines the retrieved results based on relevance.
+4. **Context + Query** → The selected chunks are combined with the user's question.
+5. **LLM Generation** → Groq's `llama-3.1-8b-instant` generates the final answer.
+6. **Response** → The generated response is displayed in the Streamlit interface.
+
+### 📚 Document Ingestion Workflow
+
+1. **PDF Upload** → 11 PDF documents are provided as the knowledge source.
+2. **Text Extraction** → Text is extracted using LlamaIndex with OCR support.
+3. **Chunking** → Documents are divided into chunks of approximately 512 tokens with 50-token overlap.
+4. **Embedding Generation** → `all-MiniLM-L6-v2` converts each chunk into a 384-dimensional vector.
+5. **FAISS Indexing** → 2,176 chunks are stored in a FAISS HNSW vector index.
+6. **Persistence** → The FAISS index and metadata are stored locally in the `storage/` directory.
 ---
 
 ## 🛠️ Tech Stack
