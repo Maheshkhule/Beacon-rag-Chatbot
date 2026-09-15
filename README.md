@@ -129,31 +129,61 @@ flowchart TD
 ---
 
 ## 📂 Project Structure
-Beacon---rag-Chatbot/
-│
-├── app.py # 🎨 Streamlit UI (ChatGPT-style interface)
-├── ingestion.py # 📄 PDF ingestion with OCR fallback
-├── index.py # 🔍 FAISS index building and loading
-├── rag.py # 🧠 RAG pipeline (retriever + LLM + synthesizer)
-├── utils.py # 🔧 Environment variables and helpers
-├── run.py # 🖥️ CLI testing (optional)
-│
-├── requirements.txt # 📦 Python dependencies
-├── .env.example # 📝 Environment template (copy to .env)
-├── .gitignore # 🚫 Git ignore rules
-├── LICENSE # 📄 MIT License
-├── README.md # 📖 This file
-│
-├── pdfs/ # 📁 Place your PDF books here
-│ └── (11+ PDF files)
-│
-└── storage/ # 💾 Persisted FAISS index (auto-created)
-├── docstore.json # Document store
-├── faiss.index # FAISS vector index
-└── index_store.json # Index metadata
 
+```text
+Beacon-RAG-Chatbot/
+│
+├── app.py
+│   └── 🎨 Streamlit UI with ChatGPT-style interface
+│
+├── ingestion.py
+│   └── 📄 PDF ingestion with OCR fallback
+│
+├── index.py
+│   └── 🔍 FAISS index creation, persistence & loading
+│
+├── rag.py
+│   └── 🧠 RAG pipeline — retriever, LLM & response generation
+│
+├── utils.py
+│   └── 🔧 Environment variables and utility functions
+│
+├── run.py
+│   └── 🖥️ Optional CLI-based testing
+│
+├── requirements.txt
+│   └── 📦 Python dependencies
+│
+├── .env.example
+│   └── 📝 Environment variable template
+│
+├── .gitignore
+│   └── 🚫 Files and folders excluded from Git
+│
+├── LICENSE
+│   └── 📄 MIT License
+│
+├── README.md
+│   └── 📖 Project documentation
+│
+├── pdfs/
+│   ├── 📁 PDF knowledge base
+│   ├── document_01.pdf
+│   ├── document_02.pdf
+│   ├── ...
+│   └── document_11.pdf
+│
+└── storage/
+    ├── docstore.json
+    │   └── 📄 Document chunks & metadata
+    │
+    ├── faiss.index
+    │   └── 🔍 FAISS vector index
+    │
+    └── index_store.json
+        └── 🗂️ Index metadata
+```
 
----
 
 ## 🚀 Quick Start
 
