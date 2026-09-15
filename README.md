@@ -198,8 +198,8 @@ Beacon-RAG-Chatbot/
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/Maheshkhule/Beacon---rag-Chatbot.git
-cd Beacon---rag-Chatbot
+git clone https://github.com/Maheshkhule/Beacon-rag-Chatbot.git
+cd Beacon-rag-Chatbot
 
 2. Create virtual environment
 # Windows
